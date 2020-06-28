@@ -98,11 +98,8 @@ e e 7 e e e e e e e e e 7 7 7 7
 7 7 7 e e e e e e e e e e e 7 7 
 `
 }
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.feuer, function (sprite, otherSprite) {
-    sprite.destroy()
-    otherSprite.destroy()
-    info.changeScoreBy(1)
-    feuerwehr.say("jo")
+sprites.onCreated(SpriteKind.feuer, function (sprite) {
+    tiles.placeOnRandomTile(mySprite2, sprites.castle.tileGrass1)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
@@ -124,13 +121,16 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 . . . . . . . . . . . . . . . . 
 `, feuerwehr, projektilVx, projektilVy)
 })
-sprites.onCreated(SpriteKind.feuer, function (sprite) {
-    tiles.placeOnRandomTile(mySprite2, myTiles.tile1)
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.feuer, function (sprite, otherSprite) {
+    sprite.destroy()
+    otherSprite.destroy()
+    info.changeScoreBy(1)
+    feuerwehr.say("jo")
 })
-let mySprite2: Sprite = null
 let projektilVy = 0
 let projektilVx = 0
 let projectile: Sprite = null
+let mySprite2: Sprite = null
 let feuerwehr: Sprite = null
 feuerwehr = sprites.create(img`
 . . . . . . 2 2 2 . . . . . . . 
@@ -191,7 +191,7 @@ tiles.placeOnRandomTile(feuerwehr, sprites.castle.tileGrass2)
 scene.cameraFollowSprite(feuerwehr)
 controller.moveSprite(feuerwehr)
 info.startCountdown(60)
-game.onUpdateInterval(2000, function () {
+for (let index = 0; index < 20; index++) {
     mySprite2 = sprites.create(img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
@@ -210,7 +210,7 @@ game.onUpdateInterval(2000, function () {
 2 2 2 4 2 2 2 4 4 2 2 2 2 2 2 2 
 2 2 2 4 4 2 2 4 2 2 2 2 2 2 2 2 
 `, SpriteKind.feuer)
-})
+}
 game.onUpdateInterval(100, function () {
     if (Math.abs(controller.dx()) > 0) {
         if (controller.dx() < 0) {
@@ -231,4 +231,24 @@ game.onUpdateInterval(100, function () {
         projektilVy = 0
     }
     feuerwehr.say("")
+})
+game.onUpdateInterval(2000, function () {
+    mySprite2 = sprites.create(img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . 5 . . 
+. . . . . . . . 5 . . . 5 5 . . 
+. . . . . . . 5 5 5 5 5 5 5 5 . 
+. . . . . . . 5 2 4 5 5 4 4 5 . 
+. . . 5 . 5 5 5 2 4 5 4 2 4 5 5 
+. . 5 4 5 5 4 4 2 2 2 2 2 2 4 5 
+. 5 4 2 4 4 2 2 2 2 2 2 2 2 4 4 
+5 4 2 2 2 2 2 2 2 2 2 2 2 2 2 4 
+2 2 2 4 2 2 2 4 4 2 2 2 2 2 2 2 
+2 2 2 4 4 2 2 4 2 2 2 2 2 2 2 2 
+`, SpriteKind.feuer)
 })
